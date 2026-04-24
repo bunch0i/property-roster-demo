@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Property Staff Roster</title>
+<style>
+  :root {
+    --bg: #faf9f6;
+    --surface: #ffffff;
+    --surface-2: #f1efe8;
+    --text: #1a1a18;
+    --text-2: #5f5e5a;
+    --text-3: #888780;
+    --border: rgba(0,0,0,0.12);
+    --border-2: rgba(0,0,0,0.2);
+    --radius: 8px;
+    --radius-lg: 12px;
+    --danger-bg: #FCEBEB;
+    --danger-text: #791F1F;
+    --danger-border: #F09595;
+    --success-bg: #EAF3DE;
+    --success-text: #27500A;
+    --success-border: #97C459;
+    --warning-bg: #FAEEDA;
+    --warning-text: #633806;
+    --warning-border: #EF9F27;
+    --info-bg: #E6F1FB;
+    --info-text: #0C447C;
+    --info-border: #85B7EB;
+    --pm-bg: #EEEDFE;
+    --pm-text: #3C3489;
+    --sec-bg: #E1F5EE;
+    --sec-text: #085041;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --surface: #26261f;
+      --surface-2: #2c2c2a;
+      --text: #f1efe8;
+      --text-2: #b4b2a9;
+      --text-3: #888780;
+      --border: rgba(255,255,255,0.12);
+      --border-2: rgba(255,255,255,0.25);
+      --danger-bg: #501313;
+      --danger-text: #F09595;
+      --danger-border: #A32D2D;
+      --success-bg: #173404;
+      --success-text: #C0DD97;
+      --success-border: #639922;
+      --warning-bg: #412402;
+      --warning-text: #FAC775;
+      --warning-border: #BA7517;
+      --info-bg: #042C53;
+      --info-text: #85B7EB;
+      --info-border: #185FA5;
+      --pm-bg: #3C3489;
+      --pm-text: #CECBF6;
+      --sec-bg: #085041;
+      --sec-text: #9FE1CB;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .app { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.25rem; }
+  .masthead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 0.5px solid var(--border); }
+  .masthead h1 { font-size: 20px; font-weight: 500; margin: 0; }
+  .masthead p { margin: 2px 0 0; font-size: 13px; color: var(--text-2); }
+  .user-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--surface-2); border-radius: var(--radius); margin-bottom: 1.25rem; font-size: 13px; flex-wrap: wrap; gap: 8px; }
+  .btn { background: transparent; border: 0.5px solid var(--border-2); border-radius: var(--radius); padding: 7px 14px; font-size: 13px; font-family: inherit; color: var(--text); cursor: pointer; transition: all 0.15s; }
+  .btn:hover { background: var(--surface-2); }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .btn-primary:hover { opacity: 0.88; background: var(--text); }
+  .btn-sm { font-size: 12px; padding: 5px 10px; }
+  .btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tab-bar { display: flex; gap: 4px; border-bottom: 0.5px solid var(--border); margin-bottom: 1.25rem; overflow-x: auto; }
+  .tab { background: transparent; border: none; padding: 10px 16px; font-size: 14px; color: var(--text-2); cursor: pointer; border-bottom: 2px solid transparent; font-family: inherit; white-space: nowrap; }
+  .tab.active { color: var(--text); border-bottom-color: var(--text); font-weight: 500; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 8px; }
+  .panel-head h2 { font-size: 18px; font-weight: 500; margin: 0; }
+  .muted { color: var(--text-2); font-size: 13px; }
+  .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1rem; }
+  .metric { background: var(--surface-2); border-radius: var(--radius); padding: 12px; }
+  .metric-label { font-size: 12px; color: var(--text-2); margin-bottom: 4px; }
+  .metric-val { font-size: 22px; font-weight: 500; }
+  @media (max-width: 600px) { .metrics { grid-template-columns: repeat(2, 1fr); } }
+  .grid-shifts { display: grid; grid-template-columns: 80px repeat(7, minmax(0, 1fr)); gap: 4px; min-width: 720px; }
+  .grid-wrap { overflow-x: auto; padding-bottom: 4px; }
+  .day-head { font-size: 12px; color: var(--text-2); text-align: center; padding: 6px 2px; font-weight: 500; }
+  .slot-label { font-size: 12px; color: var(--text-2); padding: 8px 4px; display: flex; align-items: center; }
+  .slot { background: var(--surface-2); border-radius: var(--radius); padding: 8px 6px; min-height: 48px; font-size: 12px; display: flex; flex-direction: column; gap: 2px; justify-content: center; align-items: center; text-align: center; border: 0.5px solid transparent; }
+  .slot.uncovered { background: var(--danger-bg); color: var(--danger-text); border-color: var(--danger-border); cursor: pointer; }
+  .slot.covered-pm { background: var(--pm-bg); color: var(--pm-text); }
+  .slot.covered-sec { background: var(--sec-bg); color: var(--sec-text); }
+  .slot .who { font-weight: 500; }
+  .slot .role { font-size: 11px; opacity: 0.85; }
+  .staff-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--border); }
+  .staff-row:last-child { border-bottom: none; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 13px; flex-shrink: 0; }
+  .avatar.pm { background: var(--pm-bg); color: var(--pm-text); }
+  .avatar.sec { background: var(--sec-bg); color: var(--sec-text); }
+  .staff-info { flex: 1; min-width: 0; }
+  .staff-name { font-size: 14px; font-weight: 500; }
+  .staff-meta { font-size: 12px; color: var(--text-2); }
+  .badge { font-size: 11px; padding: 3px 8px; border-radius: var(--radius); font-weight: 500; white-space: nowrap; }
+  .badge.avail { background: var(--success-bg); color: var(--success-text); }
+  .badge.off { background: var(--warning-bg); color: var(--warning-text); }
+  .badge.unavail { background: var(--danger-bg); color: var(--danger-text); }
+  .alert { border-radius: var(--radius); padding: 10px 12px; margin-bottom: 12px; font-size: 13px; display: flex; gap: 10px; align-items: flex-start; }
+  .alert.warn { background: var(--warning-bg); color: var(--warning-text); border: 0.5px solid var(--warning-border); }
+  .alert.info { background: var(--info-bg); color: var(--info-text); border: 0.5px solid var(--info-border); }
+  .alert.success { background: var(--success-bg); color: var(--success-text); border: 0.5px solid var(--success-border); }
+  .alert.danger { background: var(--danger-bg); color: var(--danger-text); border: 0.5px solid var(--danger-border); }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 12px; color: var(--text-2); margin-bottom: 4px; }
+  .field select, .field input {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--surface);
+    color: var(--text);
+    border: 0.5px solid var(--border-2);
+    border-radius: var(--radius);
+    outline: none;
+  }
+  .field select:focus, .field input:focus { box-shadow: 0 0 0 2px var(--info-border); }
+  .login-wrap { max-width: 360px; margin: 3rem auto; padding: 1.75rem; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); }
+  .log-entry { font-size: 12px; color: var(--text-2); padding: 6px 0; border-bottom: 0.5px dashed var(--border); }
+  .log-entry:last-child { border: none; }
+  .log-entry .time { color: var(--text-3); margin-right: 6px; }
+  .dialog-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 100; padding: 1rem; }
+  .dialog-bg.open { display: flex; }
+  .dialog { background: var(--surface); border-radius: var(--radius-lg); padding: 1.25rem; max-width: 360px; width: 100%; border: 0.5px solid var(--border); }
+  .dialog h3 { font-size: 16px; font-weight: 500; margin: 0 0 12px; }
+  .my-shift { display: flex; justify-content: space-between; padding: 10px 12px; background: var(--surface-2); border-radius: var(--radius); margin-bottom: 8px; font-size: 13px; align-items: center; }
+  .candidate-btn { width: 100%; margin-bottom: 6px; text-align: left; justify-content: flex-start; }
+  .err { color: var(--danger-text); font-size: 12px; margin-top: 8px; min-height: 14px; }
+  .full-btn { width: 100%; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="masthead">
+    <div>
+      <h1>Property staff roster</h1>
+      <p>Harborview Residences · 1 property · 6 staff</p>
+    </div>
+  </div>
+
+  <div class="user-bar" id="userBar"></div>
+
+  <div id="loginPanel" style="display:none;">
+    <div class="login-wrap">
+      <h3 style="font-size: 16px; font-weight: 500; margin: 0 0 1rem;">Staff sign in</h3>
+      <div class="field">
+        <label>Select your name</label>
+        <select id="loginSelect"></select>
+      </div>
+      <div class="field">
+        <label>PIN</label>
+        <input type="password" id="loginPin" placeholder="Enter your 4-digit PIN" maxlength="4" />
+      </div>
+      <button class="btn btn-primary full-btn" onclick="doStaffLogin()">Sign in</button>
+      <div id="loginErr" class="err"></div>
+    </div>
+  </div>
+
+  <div id="managerView" style="display:none;">
+    <div class="tab-bar">
+      <button class="tab active" data-tab="roster">Roster</button>
+      <button class="tab" data-tab="staff">Staff</button>
+      <button class="tab" data-tab="callins">Call-ins</button>
+      <button class="tab" data-tab="activity">Activity</button>
+    </div>
+
+    <div class="panel active" data-panel="roster">
+      <div class="metrics" id="metrics"></div>
+      <div id="coverageAlerts"></div>
+      <div class="panel-head">
+        <h2>Weekly roster</h2>
+        <span class="muted">Mon–Sun · 2 shifts/day · PM + Security required</span>
+      </div>
+      <div class="grid-wrap">
+        <div class="grid-shifts" id="rosterGrid"></div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="staff">
+      <div class="panel-head">
+        <h2>Staff directory</h2>
+        <span class="muted" id="staffSummary"></span>
+      </div>
+      <div id="staffList"></div>
+    </div>
+
+    <div class="panel" data-panel="callins">
+      <div class="panel-head">
+        <h2>Process a call-in</h2>
+        <span class="muted">Auto-assigns first qualified replacement</span>
+      </div>
+      <div class="alert info">
+        Pick a staff member and a date. The system will mark them unavailable, find their scheduled shifts, and auto-assign a qualified replacement based on least shifts worked. If no one is available, the shift becomes uncovered and appears in red on the roster.
+      </div>
+      <div class="card">
+        <div class="field">
+          <label>Who is calling in?</label>
+          <select id="callinStaff"></select>
+        </div>
+        <div class="field">
+          <label>For which day?</label>
+          <select id="callinDay"></select>
+        </div>
+        <button class="btn btn-primary" onclick="doCallIn()">Process call-in</button>
+      </div>
+      <div id="callinResult"></div>
+    </div>
+
+    <div class="panel" data-panel="activity">
+      <div class="panel-head">
+        <h2>Activity log</h2>
+        <button class="btn btn-sm" onclick="resetWeek()">Reset week</button>
+      </div>
+      <div id="activityLog" class="card"></div>
+    </div>
+  </div>
+
+  <div id="staffView" style="display:none;">
+    <div class="panel-head">
+      <h2 id="staffViewTitle">My schedule</h2>
+      <span class="muted" id="staffViewRole"></span>
+    </div>
+    <div id="staffViewShifts"></div>
+    <div class="card" style="margin-top: 1rem;">
+      <h3 style="font-size: 14px; font-weight: 500; margin: 0 0 8px;">Can't make a shift?</h3>
+      <p class="muted" style="margin: 0 0 12px;">Report unavailability for a specific day. A qualified replacement will be auto-assigned. If none are available, the manager will be notified that the shift is uncovered.</p>
+      <div class="field">
+        <label>Which day?</label>
+        <select id="staffCallinDay"></select>
+      </div>
+      <button class="btn btn-primary" onclick="staffCallIn()">Report unavailable</button>
+      <div id="staffCallinResult" style="margin-top: 12px;"></div>
+    </div>
+  </div>
+
+  <div class="dialog-bg" id="dialogBg" onclick="if(event.target===this) closeDialog()">
+    <div class="dialog">
+      <h3 id="dialogTitle">Assign shift</h3>
+      <div id="dialogBody"></div>
+      <div class="btn-row" style="margin-top: 12px; justify-content: flex-end;">
+        <button class="btn btn-sm" onclick="closeDialog()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const SLOTS = ['Day (07-19)','Night (19-07)'];
+const STAFF = [
+  {id:'s1', name:'Ama Okafor',  role:'PM',  phone:'555-1001', pin:'1001'},
+  {id:'s2', name:'Ben Liu',     role:'PM',  phone:'555-1002', pin:'1002'},
+  {id:'s3', name:'Clara Reyes', role:'PM',  phone:'555-1003', pin:'1003'},
+  {id:'s4', name:'Dev Patel',   role:'SEC', phone:'555-2001', pin:'2001'},
+  {id:'s5', name:'Esra Yilmaz', role:'SEC', phone:'555-2002', pin:'2002'},
+  {id:'s6', name:'Finn Walsh',  role:'SEC', phone:'555-2003', pin:'2003'},
+];
+
+const state = { user: null, unavailable: {}, shifts: {}, log: [] };
+
+function initShifts() {
+  state.shifts = {};
+  const pmRot = ['s1','s2','s3'];
+  const secRot = ['s4','s5','s6'];
+  for (let d = 0; d < 7; d++) {
+    for (let s = 0; s < 2; s++) {
+      const key = d + '-' + s;
+      state.shifts[key] = {
+        pm: pmRot[(d * 2 + s) % 3],
+        sec: secRot[(d * 2 + s + 1) % 3]
+      };
+    }
+  }
+}
+
+const staffById = id => STAFF.find(s => s.id === id);
+const initials = name => name.split(' ').map(p => p[0]).join('');
+const now = () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+function logIt(msg) {
+  state.log.unshift({ time: now(), msg });
+  renderLog();
+}
+
+function isAvailable(staffId, dayIdx) {
+  const u = state.unavailable[staffId] || [];
+  return !u.includes(dayIdx);
+}
+
+function shiftCount(staffId) {
+  let c = 0;
+  Object.values(state.shifts).forEach(sh => {
+    if (sh.pm === staffId || sh.sec === staffId) c++;
+  });
+  return c;
+}
+
+function findReplacement(role, dayIdx, excludeId) {
+  const pool = STAFF.filter(s => s.role === role && s.id !== excludeId && isAvailable(s.id, dayIdx));
+  const dayShiftIds = [dayIdx + '-0', dayIdx + '-1'];
+  const notBothSameDay = pool.filter(s => {
+    let sameDay = 0;
+    dayShiftIds.forEach(k => {
+      const sh = state.shifts[k];
+      if (sh && (sh.pm === s.id || sh.sec === s.id)) sameDay++;
+    });
+    return sameDay < 2;
+  });
+  notBothSameDay.sort((a, b) => shiftCount(a.id) - shiftCount(b.id));
+  return notBothSameDay[0] || null;
+}
+
+function processCallIn(staffId, dayIdx) {
+  const st = staffById(staffId);
+  if (!state.unavailable[staffId]) state.unavailable[staffId] = [];
+  if (!state.unavailable[staffId].includes(dayIdx)) state.unavailable[staffId].push(dayIdx);
+  logIt(st.name + ' marked unavailable for ' + DAYS[dayIdx]);
+  const results = [];
+  for (let s = 0; s < 2; s++) {
+    const key = dayIdx + '-' + s;
+    const sh = state.shifts[key];
+    if (!sh) continue;
+    const field = sh.pm === staffId ? 'pm' : (sh.sec === staffId ? 'sec' : null);
+    if (!field) continue;
+    const role = field === 'pm' ? 'PM' : 'SEC';
+    const rep = findReplacement(role, dayIdx, staffId);
+    if (rep) {
+      sh[field] = rep.id;
+      results.push({ slot: SLOTS[s], action: 'reassigned', to: rep.name });
+      logIt('Auto-assigned ' + rep.name + ' to ' + DAYS[dayIdx] + ' ' + SLOTS[s]);
+    } else {
+      sh[field] = null;
+      results.push({ slot: SLOTS[s], action: 'uncovered', role });
+      logIt('⚠ ' + DAYS[dayIdx] + ' ' + SLOTS[s] + ' ' + role + ' shift is UNCOVERED');
+    }
+  }
+  renderAll();
+  return results;
+}
+
+function loginManager() {
+  state.user = { type: 'manager', name: 'Manager' };
+  document.getElementById('loginPanel').style.display = 'none';
+  document.getElementById('staffView').style.display = 'none';
+  document.getElementById('managerView').style.display = 'block';
+  updateUserBar();
+  renderAll();
+}
+
+function showStaffLogin() {
+  document.getElementById('loginPanel').style.display = 'block';
+  document.getElementById('managerView').style.display = 'none';
+  document.getElementById('staffView').style.display = 'none';
+  const sel = document.getElementById('loginSelect');
+  sel.innerHTML = STAFF.map(s => '<option value="' + s.id + '">' + s.name + ' (' + (s.role === 'PM' ? 'Property Manager' : 'Security') + ')</option>').join('');
+  document.getElementById('loginPin').value = '';
+  document.getElementById('loginErr').textContent = '';
+}
+
+function doStaffLogin() {
+  const id = document.getElementById('loginSelect').value;
+  const pin = document.getElementById('loginPin').value;
+  const st = staffById(id);
+  if (st.pin !== pin) {
+    document.getElementById('loginErr').textContent = 'Incorrect PIN. Contact your manager if you\'ve forgotten it.';
+    return;
+  }
+  state.user = { type: 'staff', id, name: st.name, role: st.role };
+  document.getElementById('loginPanel').style.display = 'none';
+  document.getElementById('managerView').style.display = 'none';
+  document.getElementById('staffView').style.display = 'block';
+  updateUserBar();
+  renderStaffView();
+}
+
+function logout() {
+  state.user = null;
+  document.getElementById('managerView').style.display = 'none';
+  document.getElementById('staffView').style.display = 'none';
+  document.getElementById('loginPanel').style.display = 'none';
+  updateUserBar();
+}
+
+function updateUserBar() {
+  const bar = document.getElementById('userBar');
+  if (!state.user) {
+    bar.innerHTML = '<span>Not signed in</span><div class="btn-row"><button class="btn btn-sm" onclick="loginManager()">Sign in as manager</button><button class="btn btn-sm" onclick="showStaffLogin()">Sign in as staff</button></div>';
+  } else {
+    const roleLabel = state.user.type === 'staff'
+      ? (state.user.role === 'PM' ? 'Property Manager' : 'Security')
+      : 'Manager';
+    bar.innerHTML = '<span>Signed in as <strong style="font-weight:500;">' + state.user.name + '</strong> · ' + roleLabel + '</span><button class="btn btn-sm" onclick="logout()">Sign out</button>';
+  }
+}
+
+document.querySelectorAll('.tab').forEach(t => {
+  t.onclick = () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelector('[data-panel="' + t.dataset.tab + '"]').classList.add('active');
+  };
+});
+
+function renderRoster() {
+  const g = document.getElementById('rosterGrid');
+  let html = '<div></div>';
+  DAYS.forEach(d => html += '<div class="day-head">' + d + '</div>');
+  SLOTS.forEach((slot, sIdx) => {
+    html += '<div class="slot-label">' + slot + '</div>';
+    DAYS.forEach((d, dIdx) => {
+      const key = dIdx + '-' + sIdx;
+      const sh = state.shifts[key] || {};
+      const pm = sh.pm ? staffById(sh.pm) : null;
+      const sec = sh.sec ? staffById(sh.sec) : null;
+      html += '<div style="display:flex; flex-direction:column; gap:3px;">';
+      html += pm
+        ? '<div class="slot covered-pm"><span class="who">' + initials(pm.name) + '</span><span class="role">PM</span></div>'
+        : '<div class="slot uncovered" onclick="coverShift(\'' + key + '\',\'pm\')"><span class="who">Uncovered</span><span class="role">PM</span></div>';
+      html += sec
+        ? '<div class="slot covered-sec"><span class="who">' + initials(sec.name) + '</span><span class="role">SEC</span></div>'
+        : '<div class="slot uncovered" onclick="coverShift(\'' + key + '\',\'sec\')"><span class="who">Uncovered</span><span class="role">SEC</span></div>';
+      html += '</div>';
+    });
+  });
+  g.innerHTML = html;
+}
+
+function renderMetrics() {
+  let total = 0, covered = 0, uncovered = 0;
+  Object.values(state.shifts).forEach(sh => {
+    total += 2;
+    if (sh.pm) covered++; else uncovered++;
+    if (sh.sec) covered++; else uncovered++;
+  });
+  const unavailCount = Object.values(state.unavailable).reduce((a, b) => a + b.length, 0);
+  document.getElementById('metrics').innerHTML = [
+    ['Total shifts', total],
+    ['Covered', covered],
+    ['Uncovered', uncovered],
+    ['Call-ins', unavailCount]
+  ].map(([l, v]) => '<div class="metric"><div class="metric-label">' + l + '</div><div class="metric-val">' + v + '</div></div>').join('');
+
+  const alerts = document.getElementById('coverageAlerts');
+  if (uncovered > 0) {
+    alerts.innerHTML = '<div class="alert warn">⚠ ' + uncovered + ' uncovered shift' + (uncovered > 1 ? 's' : '') + ' this week. Click red cells to manually assign, or contact off-duty staff.</div>';
+  } else {
+    alerts.innerHTML = '<div class="alert success">✓ All shifts covered.</div>';
+  }
+}
+
+function renderStaff() {
+  const pmCount = STAFF.filter(s => s.role === 'PM').length;
+  const secCount = STAFF.filter(s => s.role === 'SEC').length;
+  document.getElementById('staffSummary').textContent = pmCount + ' property managers · ' + secCount + ' security';
+  const list = document.getElementById('staffList');
+  list.innerHTML = '<div class="card">' + STAFF.map(s => {
+    const unavail = state.unavailable[s.id] || [];
+    const count = shiftCount(s.id);
+    const status = unavail.length > 0
+      ? '<span class="badge unavail">Unavail ' + unavail.length + 'd</span>'
+      : '<span class="badge avail">Available</span>';
+    const roleLabel = s.role === 'PM' ? 'Property Manager' : 'Security';
+    return '<div class="staff-row">' +
+      '<div class="avatar ' + (s.role === 'PM' ? 'pm' : 'sec') + '">' + initials(s.name) + '</div>' +
+      '<div class="staff-info"><div class="staff-name">' + s.name + '</div><div class="staff-meta">' + roleLabel + ' · ' + s.phone + ' · ' + count + ' shifts · PIN ' + s.pin + '</div></div>' +
+      status +
+      '</div>';
+  }).join('') + '</div>';
+}
+
+function renderCallinSelects() {
+  document.getElementById('callinStaff').innerHTML = STAFF.map(s => '<option value="' + s.id + '">' + s.name + ' (' + (s.role === 'PM' ? 'PM' : 'Security') + ')</option>').join('');
+  document.getElementById('callinDay').innerHTML = DAYS.map((d, i) => '<option value="' + i + '">' + d + '</option>').join('');
+}
+
+function renderLog() {
+  const l = document.getElementById('activityLog');
+  if (!l) return;
+  if (state.log.length === 0) {
+    l.innerHTML = '<div class="muted">No activity yet.</div>';
+    return;
+  }
+  l.innerHTML = state.log.slice(0, 30).map(e => '<div class="log-entry"><span class="time">' + e.time + '</span>' + e.msg + '</div>').join('');
+}
+
+function doCallIn() {
+  const id = document.getElementById('callinStaff').value;
+  const day = parseInt(document.getElementById('callinDay').value);
+  const results = processCallIn(id, day);
+  const st = staffById(id);
+  const res = document.getElementById('callinResult');
+  if (results.length === 0) {
+    res.innerHTML = '<div class="alert info">' + st.name + ' had no shifts on ' + DAYS[day] + '. Marked unavailable for the day.</div>';
+    return;
+  }
+  let html = '<div class="card"><h3 style="font-size:14px; font-weight:500; margin:0 0 10px;">Result for ' + st.name + ' · ' + DAYS[day] + '</h3>';
+  results.forEach(r => {
+    if (r.action === 'reassigned') {
+      html += '<div class="alert success" style="margin-bottom:6px;">✓ ' + r.slot + ' → reassigned to ' + r.to + '</div>';
+    } else {
+      html += '<div class="alert danger" style="margin-bottom:6px;">⚠ ' + r.slot + ' ' + r.role + ' → no qualified replacement. Shift is uncovered.</div>';
+    }
+  });
+  html += '</div>';
+  res.innerHTML = html;
+}
+
+function coverShift(key, field) {
+  const [d, s] = key.split('-').map(Number);
+  const role = field === 'pm' ? 'PM' : 'SEC';
+  const candidates = STAFF.filter(x => x.role === role && isAvailable(x.id, d));
+  const bg = document.getElementById('dialogBg');
+  document.getElementById('dialogTitle').textContent = 'Cover ' + DAYS[d] + ' ' + SLOTS[s] + ' (' + (role === 'PM' ? 'Property Manager' : 'Security') + ')';
+  const body = document.getElementById('dialogBody');
+  if (candidates.length === 0) {
+    body.innerHTML = '<div class="muted">No available ' + role + ' staff for this day. You would need to contact an off-duty staff member directly.</div>';
+  } else {
+    body.innerHTML = candidates.map(c =>
+      '<button class="btn candidate-btn" onclick="assignShift(\'' + key + '\',\'' + field + '\',\'' + c.id + '\')">' + c.name + ' · ' + shiftCount(c.id) + ' shifts this week</button>'
+    ).join('');
+  }
+  bg.classList.add('open');
+}
+
+function assignShift(key, field, staffId) {
+  state.shifts[key][field] = staffId;
+  const st = staffById(staffId);
+  const [d, s] = key.split('-').map(Number);
+  logIt('Manually assigned ' + st.name + ' to ' + DAYS[d] + ' ' + SLOTS[s]);
+  closeDialog();
+  renderAll();
+}
+
+function closeDialog() {
+  document.getElementById('dialogBg').classList.remove('open');
+}
+
+function resetWeek() {
+  initShifts();
+  state.unavailable = {};
+  state.log = [];
+  logIt('Week reset. Default rotation restored.');
+  renderAll();
+}
+
+function renderStaffView() {
+  if (!state.user || state.user.type !== 'staff') return;
+  const id = state.user.id;
+  const st = staffById(id);
+  document.getElementById('staffViewTitle').textContent = 'Hi, ' + st.name.split(' ')[0];
+  document.getElementById('staffViewRole').textContent = st.role === 'PM' ? 'Property Manager' : 'Security';
+  const mine = [];
+  for (let d = 0; d < 7; d++) {
+    for (let s = 0; s < 2; s++) {
+      const key = d + '-' + s;
+      const sh = state.shifts[key];
+      if (sh && (sh.pm === id || sh.sec === id)) {
+        mine.push({ day: d, slot: s });
+      }
+    }
+  }
+  const box = document.getElementById('staffViewShifts');
+  if (mine.length === 0) {
+    box.innerHTML = '<div class="alert info">You have no shifts assigned this week.</div>';
+  } else {
+    box.innerHTML = '<div class="card"><h3 style="font-size:14px; font-weight:500; margin:0 0 10px;">My shifts (' + mine.length + ')</h3>' +
+      mine.map(m => '<div class="my-shift"><span>' + DAYS[m.day] + ' · ' + SLOTS[m.slot] + '</span><span class="badge avail">Confirmed</span></div>').join('') +
+      '</div>';
+  }
+  document.getElementById('staffCallinDay').innerHTML = DAYS.map((d, i) => '<option value="' + i + '">' + d + '</option>').join('');
+  document.getElementById('staffCallinResult').innerHTML = '';
+}
+
+function staffCallIn() {
+  const id = state.user.id;
+  const day = parseInt(document.getElementById('staffCallinDay').value);
+  const results = processCallIn(id, day);
+  const res = document.getElementById('staffCallinResult');
+  if (results.length === 0) {
+    res.innerHTML = '<div class="alert info">You had no shifts on ' + DAYS[day] + '. Marked unavailable.</div>';
+  } else {
+    let html = '';
+    results.forEach(r => {
+      if (r.action === 'reassigned') {
+        html += '<div class="alert success" style="margin-bottom:6px;">✓ ' + r.slot + ' → ' + r.to + ' will cover for you.</div>';
+      } else {
+        html += '<div class="alert danger" style="margin-bottom:6px;">⚠ ' + r.slot + ' has no replacement. Manager has been notified.</div>';
+      }
+    });
+    res.innerHTML = html;
+  }
+  renderStaffView();
+}
+
+function renderAll() {
+  if (state.user && state.user.type === 'manager') {
+    renderRoster();
+    renderMetrics();
+    renderStaff();
+    renderCallinSelects();
+    renderLog();
+  } else if (state.user && state.user.type === 'staff') {
+    renderStaffView();
+  }
+}
+
+document.getElementById('loginPin').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doStaffLogin();
+});
+
+initShifts();
+logIt('System initialized. Default roster generated for the week.');
+updateUserBar();
+</script>
+</body>
+</html>
