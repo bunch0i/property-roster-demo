@@ -62,29 +62,26 @@
     }
   }
   * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'PingFang TC', 'Microsoft JhengHei', 'Segoe UI', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 15px;
-    line-height: 1.6;
-  }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'PingFang TC', 'Microsoft JhengHei', 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
   .app { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.25rem; }
-  .masthead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 0.5px solid var(--border); }
+  .masthead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 0.5px solid var(--border); gap: 12px; flex-wrap: wrap; }
   .masthead h1 { font-size: 20px; font-weight: 500; margin: 0; }
   .masthead p { margin: 2px 0 0; font-size: 13px; color: var(--text-2); }
+  .mode-toggle { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-2); }
   .user-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--surface-2); border-radius: var(--radius); margin-bottom: 1.25rem; font-size: 13px; flex-wrap: wrap; gap: 8px; }
   .btn { background: transparent; border: 0.5px solid var(--border-2); border-radius: var(--radius); padding: 7px 14px; font-size: 13px; font-family: inherit; color: var(--text); cursor: pointer; transition: all 0.15s; }
   .btn:hover { background: var(--surface-2); }
   .btn:active { transform: scale(0.98); }
   .btn-primary { background: var(--text); color: var(--bg); border-color: var(--text); }
   .btn-primary:hover { opacity: 0.88; background: var(--text); }
+  .btn-danger { color: var(--danger-text); border-color: var(--danger-border); }
+  .btn-success { color: var(--success-text); border-color: var(--success-border); }
   .btn-sm { font-size: 12px; padding: 5px 10px; }
   .btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
   .tab-bar { display: flex; gap: 4px; border-bottom: 0.5px solid var(--border); margin-bottom: 1.25rem; overflow-x: auto; }
-  .tab { background: transparent; border: none; padding: 10px 16px; font-size: 14px; color: var(--text-2); cursor: pointer; border-bottom: 2px solid transparent; font-family: inherit; white-space: nowrap; }
+  .tab { background: transparent; border: none; padding: 10px 16px; font-size: 14px; color: var(--text-2); cursor: pointer; border-bottom: 2px solid transparent; font-family: inherit; white-space: nowrap; position: relative; }
   .tab.active { color: var(--text); border-bottom-color: var(--text); font-weight: 500; }
+  .tab-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--danger-text); margin-left: 4px; vertical-align: middle; }
   .panel { display: none; }
   .panel.active { display: block; }
   .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 8px; }
@@ -100,12 +97,18 @@
   .grid-wrap { overflow-x: auto; padding-bottom: 4px; }
   .day-head { font-size: 12px; color: var(--text-2); text-align: center; padding: 6px 2px; font-weight: 500; }
   .slot-label { font-size: 12px; color: var(--text-2); padding: 8px 4px; display: flex; align-items: center; }
-  .slot { background: var(--surface-2); border-radius: var(--radius); padding: 8px 6px; min-height: 48px; font-size: 12px; display: flex; flex-direction: column; gap: 2px; justify-content: center; align-items: center; text-align: center; border: 0.5px solid transparent; }
-  .slot.uncovered { background: var(--danger-bg); color: var(--danger-text); border-color: var(--danger-border); cursor: pointer; }
+  .slot { background: var(--surface-2); border-radius: var(--radius); padding: 8px 6px; min-height: 54px; font-size: 12px; display: flex; flex-direction: column; gap: 2px; justify-content: center; align-items: center; text-align: center; border: 0.5px solid transparent; position: relative; cursor: pointer; }
+  .slot.uncovered { background: var(--danger-bg); color: var(--danger-text); border-color: var(--danger-border); }
   .slot.covered-pm { background: var(--pm-bg); color: var(--pm-text); }
   .slot.covered-sec { background: var(--sec-bg); color: var(--sec-text); }
+  .slot.pending { border-style: dashed; border-color: var(--warning-border); }
   .slot .who { font-weight: 500; }
   .slot .role { font-size: 11px; opacity: 0.85; }
+  .slot-status { position: absolute; top: 3px; right: 3px; width: 8px; height: 8px; border-radius: 50%; }
+  .slot-status.present { background: #27500A; }
+  .slot-status.late { background: #BA7517; }
+  .slot-status.absent { background: #A32D2D; }
+  .slot-status.pending { background: #EF9F27; }
   .staff-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--border); }
   .staff-row:last-child { border-bottom: none; }
   .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 13px; flex-shrink: 0; }
@@ -118,6 +121,7 @@
   .badge.avail { background: var(--success-bg); color: var(--success-text); }
   .badge.off { background: var(--warning-bg); color: var(--warning-text); }
   .badge.unavail { background: var(--danger-bg); color: var(--danger-text); }
+  .badge.pending { background: var(--warning-bg); color: var(--warning-text); }
   .alert { border-radius: var(--radius); padding: 10px 12px; margin-bottom: 12px; font-size: 13px; display: flex; gap: 10px; align-items: flex-start; }
   .alert.warn { background: var(--warning-bg); color: var(--warning-text); border: 0.5px solid var(--warning-border); }
   .alert.info { background: var(--info-bg); color: var(--info-text); border: 0.5px solid var(--info-border); }
@@ -125,30 +129,49 @@
   .alert.danger { background: var(--danger-bg); color: var(--danger-text); border: 0.5px solid var(--danger-border); }
   .field { margin-bottom: 12px; }
   .field label { display: block; font-size: 12px; color: var(--text-2); margin-bottom: 4px; }
-  .field select, .field input {
-    width: 100%;
-    padding: 8px 10px;
-    font-size: 14px;
-    font-family: inherit;
-    background: var(--surface);
-    color: var(--text);
-    border: 0.5px solid var(--border-2);
-    border-radius: var(--radius);
-    outline: none;
-  }
-  .field select:focus, .field input:focus { box-shadow: 0 0 0 2px var(--info-border); }
+  .field select, .field input, .field textarea { width: 100%; padding: 8px 10px; font-size: 14px; font-family: inherit; background: var(--surface); color: var(--text); border: 0.5px solid var(--border-2); border-radius: var(--radius); outline: none; }
+  .field textarea { min-height: 60px; resize: vertical; }
+  .field select:focus, .field input:focus, .field textarea:focus { box-shadow: 0 0 0 2px var(--info-border); }
   .login-wrap { max-width: 360px; margin: 3rem auto; padding: 1.75rem; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); }
   .log-entry { font-size: 12px; color: var(--text-2); padding: 6px 0; border-bottom: 0.5px dashed var(--border); }
   .log-entry:last-child { border: none; }
   .log-entry .time { color: var(--text-3); margin-right: 6px; }
   .dialog-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 100; padding: 1rem; }
   .dialog-bg.open { display: flex; }
-  .dialog { background: var(--surface); border-radius: var(--radius-lg); padding: 1.25rem; max-width: 360px; width: 100%; border: 0.5px solid var(--border); }
+  .dialog { background: var(--surface); border-radius: var(--radius-lg); padding: 1.25rem; max-width: 420px; width: 100%; border: 0.5px solid var(--border); max-height: 90vh; overflow-y: auto; }
   .dialog h3 { font-size: 16px; font-weight: 500; margin: 0 0 12px; }
-  .my-shift { display: flex; justify-content: space-between; padding: 10px 12px; background: var(--surface-2); border-radius: var(--radius); margin-bottom: 8px; font-size: 13px; align-items: center; }
+  .my-shift { padding: 10px 12px; background: var(--surface-2); border-radius: var(--radius); margin-bottom: 8px; font-size: 13px; }
+  .my-shift-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .my-shift-note { margin-top: 6px; font-size: 12px; color: var(--text-2); font-style: italic; }
+  .my-shift-actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
   .candidate-btn { width: 100%; margin-bottom: 6px; text-align: left; justify-content: flex-start; }
   .err { color: var(--danger-text); font-size: 12px; margin-top: 8px; min-height: 14px; }
   .full-btn { width: 100%; }
+  .inbox-item { padding: 12px; border-radius: var(--radius); margin-bottom: 8px; background: var(--surface-2); font-size: 13px; cursor: pointer; }
+  .inbox-item.unread { background: var(--info-bg); color: var(--info-text); border: 0.5px solid var(--info-border); }
+  .inbox-item-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
+  .inbox-item-time { font-size: 11px; color: var(--text-3); white-space: nowrap; }
+  .inbox-item-actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .payroll-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .payroll-table th, .payroll-table td { padding: 8px; text-align: left; border-bottom: 0.5px solid var(--border); }
+  .payroll-table th { font-weight: 500; color: var(--text-2); font-size: 12px; }
+  .payroll-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .section-title { font-size: 14px; font-weight: 500; margin: 1rem 0 8px; }
+  .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider-sw { position: absolute; cursor: pointer; inset: 0; background: var(--border-2); border-radius: 20px; transition: 0.2s; }
+  .slider-sw:before { content: ""; position: absolute; height: 14px; width: 14px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.2s; }
+  input:checked + .slider-sw { background: var(--success-border); }
+  input:checked + .slider-sw:before { transform: translateX(16px); }
+  .legend { font-size: 12px; color: var(--text-2); margin-top: 1rem; }
+  .legend span { display: inline-flex; align-items: center; gap: 4px; margin-right: 12px; }
+  .legend i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  @media print {
+    body { background: white; color: black; }
+    .user-bar, .tab-bar, .masthead .mode-toggle, .btn, .dialog-bg, #demoBanner, .legend, #coverageAlerts { display: none !important; }
+    .panel { display: block !important; }
+    .card { border: 1px solid #ccc; break-inside: avoid; }
+  }
 </style>
 </head>
 <body>
@@ -158,13 +181,15 @@
       <h1>物業員工排班系統</h1>
       <p>海景花園 · 1 棟物業 · 共 6 位員工</p>
     </div>
+    <div class="mode-toggle">
+      <span id="modeLabel">展示</span>
+      <label class="switch"><input type="checkbox" id="modeSwitch" onchange="toggleMode()"><span class="slider-sw"></span></label>
+      <span id="modeLabel2">正式使用</span>
+    </div>
   </div>
 
-  <div class="alert info" style="margin-bottom: 1rem;">
-    <div>
-      <strong style="font-weight: 500;">展示版本</strong> · 這是一個功能展示頁面,資料不會儲存,重新整理即可還原。<br>
-      試用方式:點擊右上角「以主管身份登入」,或以員工身份登入(密碼可於員工名單中查看)。
-    </div>
+  <div class="alert info" id="demoBanner">
+    <div><strong style="font-weight: 500;">展示模式</strong> · 資料不會儲存,重新整理即還原。切換至「正式使用」後,所有資料將儲存於本瀏覽器。</div>
   </div>
 
   <div class="user-bar" id="userBar"></div>
@@ -172,14 +197,8 @@
   <div id="loginPanel" style="display:none;">
     <div class="login-wrap">
       <h3 style="font-size: 16px; font-weight: 500; margin: 0 0 1rem;">員工登入</h3>
-      <div class="field">
-        <label>請選擇您的姓名</label>
-        <select id="loginSelect"></select>
-      </div>
-      <div class="field">
-        <label>密碼</label>
-        <input type="password" id="loginPin" placeholder="請輸入 4 位數密碼" maxlength="4" />
-      </div>
+      <div class="field"><label>請選擇您的姓名</label><select id="loginSelect"></select></div>
+      <div class="field"><label>密碼</label><input type="password" id="loginPin" placeholder="請輸入 4 位數密碼" maxlength="4" /></div>
       <button class="btn btn-primary full-btn" onclick="doStaffLogin()">登入</button>
       <div id="loginErr" class="err"></div>
     </div>
@@ -190,75 +209,91 @@
       <button class="tab active" data-tab="roster">班表</button>
       <button class="tab" data-tab="staff">員工名單</button>
       <button class="tab" data-tab="callins">請假處理</button>
+      <button class="tab" data-tab="inbox">收件匣<span id="mgrInboxDot"></span></button>
+      <button class="tab" data-tab="payroll">月結薪資</button>
       <button class="tab" data-tab="activity">活動紀錄</button>
     </div>
 
     <div class="panel active" data-panel="roster">
       <div class="metrics" id="metrics"></div>
       <div id="coverageAlerts"></div>
-      <div class="panel-head">
-        <h2>本週班表</h2>
-        <span class="muted">週一至週日 · 每日 2 班 · 須同時配置物業經理與保全</span>
-      </div>
-      <div class="grid-wrap">
-        <div class="grid-shifts" id="rosterGrid"></div>
+      <div class="panel-head"><h2>本週班表</h2><span class="muted">點擊班次可標記出勤或更換人員</span></div>
+      <div class="grid-wrap"><div class="grid-shifts" id="rosterGrid"></div></div>
+      <div class="legend">
+        <span><i style="background:#27500A"></i>已出勤</span>
+        <span><i style="background:#BA7517"></i>遲到</span>
+        <span><i style="background:#A32D2D"></i>缺勤</span>
+        <span><i style="background:#EF9F27"></i>待確認</span>
       </div>
     </div>
 
     <div class="panel" data-panel="staff">
-      <div class="panel-head">
-        <h2>員工名單</h2>
-        <span class="muted" id="staffSummary"></span>
-      </div>
+      <div class="panel-head"><h2>員工名單</h2><span class="muted" id="staffSummary"></span></div>
       <div id="staffList"></div>
     </div>
 
     <div class="panel" data-panel="callins">
-      <div class="panel-head">
-        <h2>處理請假</h2>
-        <span class="muted">自動指派第一位合格替補人員</span>
-      </div>
-      <div class="alert info">
-        請選擇請假員工與日期。系統會將該員工標記為不可排班,找出其當日所有班次,並依據本週已排班次數最少的原則,自動指派合格替補人員。若無人可替補,該班次將標記為未補位,並在班表上以紅色顯示。
-      </div>
+      <div class="panel-head"><h2>處理請假</h2><span class="muted">自動指派第一位合格替補人員</span></div>
+      <div class="alert info">系統會依據「本週班次最少」原則自動指派,並通知替補人員確認。若無人可替補,班次將標記為未補位。</div>
       <div class="card">
-        <div class="field">
-          <label>請假員工</label>
-          <select id="callinStaff"></select>
-        </div>
-        <div class="field">
-          <label>請假日期</label>
-          <select id="callinDay"></select>
-        </div>
+        <div class="field"><label>請假員工</label><select id="callinStaff"></select></div>
+        <div class="field"><label>請假日期</label><select id="callinDay"></select></div>
+        <div class="field"><label>請假原因(選填)</label><input type="text" id="callinNote" placeholder="例如:身體不適、家庭因素" /></div>
         <button class="btn btn-primary" onclick="doCallIn()">處理請假</button>
       </div>
       <div id="callinResult"></div>
     </div>
 
-    <div class="panel" data-panel="activity">
+    <div class="panel" data-panel="inbox">
+      <div class="panel-head"><h2>主管收件匣</h2><button class="btn btn-sm" onclick="markAllRead('manager')">全部標為已讀</button></div>
+      <div id="managerInbox"></div>
+    </div>
+
+    <div class="panel" data-panel="payroll">
       <div class="panel-head">
-        <h2>活動紀錄</h2>
-        <button class="btn btn-sm" onclick="resetWeek()">重設本週</button>
+        <h2>月結薪資</h2>
+        <div class="btn-row">
+          <button class="btn btn-sm" onclick="exportCSV()">匯出 CSV</button>
+          <button class="btn btn-sm" onclick="window.print()">列印報表</button>
+          <button class="btn btn-sm btn-danger" onclick="closeMonth()">結算本月並重置</button>
+        </div>
       </div>
+      <div class="alert warn">「結算本月並重置」會將本月資料匯出為 CSV、清空班表、重置請假紀錄,並準備下個月的班表。請務必先匯出 CSV 備份。</div>
+      <div id="payrollSummary"></div>
+    </div>
+
+    <div class="panel" data-panel="activity">
+      <div class="panel-head"><h2>活動紀錄</h2><button class="btn btn-sm" onclick="resetWeek()">重設本週班表</button></div>
       <div id="activityLog" class="card"></div>
     </div>
   </div>
 
   <div id="staffView" style="display:none;">
-    <div class="panel-head">
-      <h2 id="staffViewTitle">我的班表</h2>
-      <span class="muted" id="staffViewRole"></span>
+    <div class="tab-bar">
+      <button class="tab active" data-tab="myshifts">我的班表</button>
+      <button class="tab" data-tab="myinbox">通知<span id="stfInboxDot"></span></button>
+      <button class="tab" data-tab="myleave">請假</button>
     </div>
-    <div id="staffViewShifts"></div>
-    <div class="card" style="margin-top: 1rem;">
-      <h3 style="font-size: 14px; font-weight: 500; margin: 0 0 8px;">無法出勤?</h3>
-      <p class="muted" style="margin: 0 0 12px;">請選擇無法出勤的日期。系統將自動指派合格替補人員;若無人可替補,將通知主管該班次未補位。</p>
-      <div class="field">
-        <label>請假日期</label>
-        <select id="staffCallinDay"></select>
+
+    <div class="panel active" data-panel="myshifts">
+      <div class="panel-head"><h2 id="staffViewTitle">我的班表</h2><span class="muted" id="staffViewRole"></span></div>
+      <div id="staffViewShifts"></div>
+    </div>
+
+    <div class="panel" data-panel="myinbox">
+      <div class="panel-head"><h2>我的通知</h2><button class="btn btn-sm" onclick="markAllRead('staff')">全部標為已讀</button></div>
+      <div id="staffInbox"></div>
+    </div>
+
+    <div class="panel" data-panel="myleave">
+      <div class="panel-head"><h2>提出請假</h2></div>
+      <div class="card">
+        <p class="muted" style="margin: 0 0 12px;">系統將自動指派合格替補人員;若無人可替補,將通知主管處理。</p>
+        <div class="field"><label>請假日期</label><select id="staffCallinDay"></select></div>
+        <div class="field"><label>請假原因(選填)</label><input type="text" id="staffCallinNote" placeholder="例如:身體不適、家庭因素" /></div>
+        <button class="btn btn-primary" onclick="staffCallIn()">提出請假</button>
+        <div id="staffCallinResult" style="margin-top: 12px;"></div>
       </div>
-      <button class="btn btn-primary" onclick="staffCallIn()">提出請假</button>
-      <div id="staffCallinResult" style="margin-top: 12px;"></div>
     </div>
   </div>
 
@@ -267,7 +302,7 @@
       <h3 id="dialogTitle">指派班次</h3>
       <div id="dialogBody"></div>
       <div class="btn-row" style="margin-top: 12px; justify-content: flex-end;">
-        <button class="btn btn-sm" onclick="closeDialog()">取消</button>
+        <button class="btn btn-sm" onclick="closeDialog()">關閉</button>
       </div>
     </div>
   </div>
@@ -276,63 +311,148 @@
 <script>
 const DAYS = ['週一','週二','週三','週四','週五','週六','週日'];
 const SLOTS = ['日班 (07-19)','夜班 (19-07)'];
+const HOURS_PER_SHIFT = 12;
 const ROLE_LABEL = { PM: '物業經理', SEC: '保全' };
+const STATUS_LABEL = { confirmed: '待出勤', present: '已出勤', late: '遲到', absent: '缺勤', pending: '待確認' };
+const STORAGE_KEY = 'roster_v2_state';
+const STORAGE_MODE = 'roster_v2_mode';
+
 const STAFF = [
-  {id:'s1', name:'陳雅文', role:'PM',  phone:'0912-001', pin:'1001'},
-  {id:'s2', name:'林建宏', role:'PM',  phone:'0912-002', pin:'1002'},
-  {id:'s3', name:'黃美玲', role:'PM',  phone:'0912-003', pin:'1003'},
-  {id:'s4', name:'張志偉', role:'SEC', phone:'0922-001', pin:'2001'},
-  {id:'s5', name:'吳淑芬', role:'SEC', phone:'0922-002', pin:'2002'},
-  {id:'s6', name:'李俊傑', role:'SEC', phone:'0922-003', pin:'2003'},
+  {id:'s1', name:'陳雅文', role:'PM',  phone:'0912-001', pin:'1001', hourly:250},
+  {id:'s2', name:'林建宏', role:'PM',  phone:'0912-002', pin:'1002', hourly:250},
+  {id:'s3', name:'黃美玲', role:'PM',  phone:'0912-003', pin:'1003', hourly:240},
+  {id:'s4', name:'張志偉', role:'SEC', phone:'0922-001', pin:'2001', hourly:200},
+  {id:'s5', name:'吳淑芬', role:'SEC', phone:'0922-002', pin:'2002', hourly:200},
+  {id:'s6', name:'李俊傑', role:'SEC', phone:'0922-003', pin:'2003', hourly:190},
 ];
 
-const state = { user: null, unavailable: {}, shifts: {}, log: [] };
+const state = {
+  user: null, unavailable: {}, shifts: {}, log: [], notifications: [],
+  shiftNotes: {}, liveMode: false, monthStart: new Date().toISOString().slice(0,10)
+};
 
 function initShifts() {
   state.shifts = {};
-  const pmRot = ['s1','s2','s3'];
-  const secRot = ['s4','s5','s6'];
+  const pmRot = ['s1','s2','s3']; const secRot = ['s4','s5','s6'];
   for (let d = 0; d < 7; d++) {
     for (let s = 0; s < 2; s++) {
       const key = d + '-' + s;
       state.shifts[key] = {
-        pm: pmRot[(d * 2 + s) % 3],
-        sec: secRot[(d * 2 + s + 1) % 3]
+        pm: { id: pmRot[(d * 2 + s) % 3], status: 'confirmed' },
+        sec: { id: secRot[(d * 2 + s + 1) % 3], status: 'confirmed' }
       };
     }
   }
 }
 
+function saveState() {
+  if (!state.liveMode) return;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      unavailable: state.unavailable, shifts: state.shifts, log: state.log,
+      notifications: state.notifications, shiftNotes: state.shiftNotes, monthStart: state.monthStart
+    }));
+  } catch(e) { console.warn('save failed', e); }
+}
+function loadState() {
+  if (!state.liveMode) return false;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    Object.assign(state, JSON.parse(raw));
+    return true;
+  } catch(e) { return false; }
+}
+
+function toggleMode() {
+  const sw = document.getElementById('modeSwitch');
+  state.liveMode = sw.checked;
+  localStorage.setItem(STORAGE_MODE, state.liveMode ? '1' : '0');
+  updateModeUI();
+  if (state.liveMode) {
+    if (!loadState()) { initShifts(); logIt('已啟用正式模式,資料將儲存於本瀏覽器。'); saveState(); }
+    else logIt('已載入先前儲存的資料。');
+  } else {
+    initShifts(); state.unavailable = {}; state.notifications = {}; state.notifications = []; state.shiftNotes = {}; state.log = [];
+    logIt('已切換為展示模式。');
+  }
+  renderAll();
+}
+
+function updateModeUI() {
+  document.getElementById('modeSwitch').checked = state.liveMode;
+  document.getElementById('demoBanner').style.display = state.liveMode ? 'none' : 'flex';
+  const ml = document.getElementById('modeLabel'); const ml2 = document.getElementById('modeLabel2');
+  if (state.liveMode) { ml.style.opacity = '0.5'; ml2.style.opacity = '1'; ml2.style.fontWeight = '500'; ml.style.fontWeight = '400'; }
+  else { ml.style.opacity = '1'; ml.style.fontWeight = '500'; ml2.style.opacity = '0.5'; ml2.style.fontWeight = '400'; }
+}
+
 const staffById = id => STAFF.find(s => s.id === id);
-const shortName = name => name.length >= 2 ? name.slice(-2) : name;
+const shortName = n => n.length >= 2 ? n.slice(-2) : n;
 const now = () => new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
+const nowFull = () => new Date().toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false });
 
 function logIt(msg) {
   state.log.unshift({ time: now(), msg });
-  renderLog();
+  if (state.log.length > 200) state.log = state.log.slice(0, 200);
+  renderLog(); saveState();
+}
+
+function notify(target, title, body, actions) {
+  state.notifications.unshift({
+    id: 'n' + Date.now() + Math.random().toString(36).slice(2,6),
+    target, title, body, actions: actions || null, time: nowFull(), read: false
+  });
+  renderInbox(); updateInboxDots(); saveState();
+}
+
+function markRead(nid) {
+  const n = state.notifications.find(x => x.id === nid);
+  if (n) { n.read = true; renderInbox(); updateInboxDots(); saveState(); }
+}
+function markAllRead(scope) {
+  state.notifications.forEach(n => {
+    if (scope === 'manager' && n.target === 'manager') n.read = true;
+    if (scope === 'staff' && state.user && n.target === state.user.id) n.read = true;
+  });
+  renderInbox(); updateInboxDots(); saveState();
 }
 
 function isAvailable(staffId, dayIdx) {
   const u = state.unavailable[staffId] || [];
-  return !u.includes(dayIdx);
+  return !u.some(x => (typeof x === 'object' ? x.day === dayIdx : x === dayIdx));
+}
+
+function getShiftHolder(sh, field) {
+  if (!sh || !sh[field]) return null;
+  return typeof sh[field] === 'object' ? sh[field].id : sh[field];
+}
+function getShiftStatus(sh, field) {
+  if (!sh || !sh[field]) return null;
+  return typeof sh[field] === 'object' ? (sh[field].status || 'confirmed') : 'confirmed';
+}
+function setShiftHolder(sh, field, id, status) {
+  if (id === null) { sh[field] = null; return; }
+  sh[field] = { id, status: status || 'confirmed' };
 }
 
 function shiftCount(staffId) {
   let c = 0;
   Object.values(state.shifts).forEach(sh => {
-    if (sh.pm === staffId || sh.sec === staffId) c++;
+    if (getShiftHolder(sh, 'pm') === staffId || getShiftHolder(sh, 'sec') === staffId) c++;
   });
   return c;
 }
 
-function findReplacement(role, dayIdx, excludeId) {
-  const pool = STAFF.filter(s => s.role === role && s.id !== excludeId && isAvailable(s.id, dayIdx));
+function findReplacement(role, dayIdx, excludeIds) {
+  const excl = Array.isArray(excludeIds) ? excludeIds : [excludeIds];
+  const pool = STAFF.filter(s => s.role === role && !excl.includes(s.id) && isAvailable(s.id, dayIdx));
   const dayShiftIds = [dayIdx + '-0', dayIdx + '-1'];
   const notBothSameDay = pool.filter(s => {
     let sameDay = 0;
     dayShiftIds.forEach(k => {
       const sh = state.shifts[k];
-      if (sh && (sh.pm === s.id || sh.sec === s.id)) sameDay++;
+      if (sh && (getShiftHolder(sh, 'pm') === s.id || getShiftHolder(sh, 'sec') === s.id)) sameDay++;
     });
     return sameDay < 2;
   });
@@ -340,32 +460,94 @@ function findReplacement(role, dayIdx, excludeId) {
   return notBothSameDay[0] || null;
 }
 
-function processCallIn(staffId, dayIdx) {
+function processCallIn(staffId, dayIdx, reason) {
   const st = staffById(staffId);
   if (!state.unavailable[staffId]) state.unavailable[staffId] = [];
-  if (!state.unavailable[staffId].includes(dayIdx)) state.unavailable[staffId].push(dayIdx);
-  logIt(st.name + ' 已登記 ' + DAYS[dayIdx] + ' 請假');
+  const existing = state.unavailable[staffId].findIndex(x => (typeof x === 'object' ? x.day === dayIdx : x === dayIdx));
+  if (existing >= 0) state.unavailable[staffId].splice(existing, 1);
+  state.unavailable[staffId].push({ day: dayIdx, reason: reason || '', at: nowFull() });
+  logIt(st.name + ' 已登記 ' + DAYS[dayIdx] + ' 請假' + (reason ? ' · ' + reason : ''));
+  notify('manager', '員工請假', st.name + ' 申請 ' + DAYS[dayIdx] + ' 請假' + (reason ? '(' + reason + ')' : '') + '。系統正在尋找替補。');
+
   const results = [];
   for (let s = 0; s < 2; s++) {
     const key = dayIdx + '-' + s;
     const sh = state.shifts[key];
     if (!sh) continue;
-    const field = sh.pm === staffId ? 'pm' : (sh.sec === staffId ? 'sec' : null);
+    const field = getShiftHolder(sh, 'pm') === staffId ? 'pm' : (getShiftHolder(sh, 'sec') === staffId ? 'sec' : null);
     if (!field) continue;
     const role = field === 'pm' ? 'PM' : 'SEC';
-    const rep = findReplacement(role, dayIdx, staffId);
+    const rep = findReplacement(role, dayIdx, [staffId]);
     if (rep) {
-      sh[field] = rep.id;
+      setShiftHolder(sh, field, rep.id, 'pending');
       results.push({ slot: SLOTS[s], action: 'reassigned', to: rep.name });
-      logIt('已自動指派 ' + rep.name + ' 接手 ' + DAYS[dayIdx] + ' ' + SLOTS[s]);
+      logIt('已自動指派 ' + rep.name + ' 接手 ' + DAYS[dayIdx] + ' ' + SLOTS[s] + '(待確認)');
+      notify(rep.id, '代班請求', '請確認是否接受 ' + DAYS[dayIdx] + ' ' + SLOTS[s] + ' 的代班(原為 ' + st.name + ')。', [
+        { label: '接受', action: 'accept_shift', args: [key, field] },
+        { label: '拒絕', action: 'decline_shift', args: [key, field, staffId] }
+      ]);
+      notify('manager', '自動代班通知', '系統已指派 ' + rep.name + ' 代班 ' + DAYS[dayIdx] + ' ' + SLOTS[s] + ',等待本人確認。');
     } else {
-      sh[field] = null;
+      setShiftHolder(sh, field, null);
       results.push({ slot: SLOTS[s], action: 'uncovered', role });
       logIt('⚠ ' + DAYS[dayIdx] + ' ' + SLOTS[s] + ' ' + ROLE_LABEL[role] + ' 班次未補位');
+      notify('manager', '⚠ 班次未補位', DAYS[dayIdx] + ' ' + SLOTS[s] + ' ' + ROLE_LABEL[role] + ' 無合格替補人員,請手動處理。');
     }
   }
-  renderAll();
+  saveState(); renderAll();
   return results;
+}
+
+function acceptShift(key, field) {
+  const sh = state.shifts[key]; if (!sh) return;
+  setShiftHolder(sh, field, getShiftHolder(sh, field), 'confirmed');
+  const [d, s] = key.split('-').map(Number);
+  const st = staffById(getShiftHolder(sh, field));
+  logIt(st.name + ' 已接受 ' + DAYS[d] + ' ' + SLOTS[s] + ' 代班');
+  notify('manager', '代班已確認', st.name + ' 已確認 ' + DAYS[d] + ' ' + SLOTS[s] + ' 代班。');
+  saveState(); renderAll();
+}
+
+function declineShift(key, field, originalExcludeId) {
+  const sh = state.shifts[key]; if (!sh) return;
+  const decliner = staffById(getShiftHolder(sh, field));
+  const [d, s] = key.split('-').map(Number);
+  const role = field === 'pm' ? 'PM' : 'SEC';
+  logIt(decliner.name + ' 拒絕 ' + DAYS[d] + ' ' + SLOTS[s] + ' 代班,尋找下一位');
+  const next = findReplacement(role, d, [originalExcludeId, decliner.id]);
+  if (next) {
+    setShiftHolder(sh, field, next.id, 'pending');
+    logIt('改派 ' + next.name + ' 接手 ' + DAYS[d] + ' ' + SLOTS[s]);
+    notify(next.id, '代班請求', '請確認是否接受 ' + DAYS[d] + ' ' + SLOTS[s] + ' 的代班。', [
+      { label: '接受', action: 'accept_shift', args: [key, field] },
+      { label: '拒絕', action: 'decline_shift', args: [key, field, originalExcludeId] }
+    ]);
+    notify('manager', '代班被拒絕,已改派', decliner.name + ' 拒絕代班,改派 ' + next.name + '。');
+  } else {
+    setShiftHolder(sh, field, null);
+    logIt('⚠ ' + DAYS[d] + ' ' + SLOTS[s] + ' 無其他替補,標記為未補位');
+    notify('manager', '⚠ 代班被拒絕且無替補', decliner.name + ' 拒絕代班,且無其他可用人員。班次未補位。');
+  }
+  saveState(); renderAll();
+}
+
+function markAttendance(key, field, status) {
+  const sh = state.shifts[key]; if (!sh) return;
+  const holder = getShiftHolder(sh, field); if (!holder) return;
+  setShiftHolder(sh, field, holder, status);
+  const [d, s] = key.split('-').map(Number);
+  const st = staffById(holder);
+  logIt(st.name + ' 於 ' + DAYS[d] + ' ' + SLOTS[s] + ' 標記為「' + STATUS_LABEL[status] + '」');
+  if (status === 'late' || status === 'absent') {
+    notify('manager', '出勤異常', st.name + ' · ' + DAYS[d] + ' ' + SLOTS[s] + ' · ' + STATUS_LABEL[status]);
+  }
+  saveState(); renderAll();
+}
+
+function addShiftNote(key, field, note) {
+  if (!state.shiftNotes[key]) state.shiftNotes[key] = {};
+  state.shiftNotes[key][field] = { note, at: nowFull() };
+  saveState(); renderAll();
 }
 
 function loginManager() {
@@ -373,16 +555,14 @@ function loginManager() {
   document.getElementById('loginPanel').style.display = 'none';
   document.getElementById('staffView').style.display = 'none';
   document.getElementById('managerView').style.display = 'block';
-  updateUserBar();
-  renderAll();
+  updateUserBar(); renderAll();
 }
 
 function showStaffLogin() {
   document.getElementById('loginPanel').style.display = 'block';
   document.getElementById('managerView').style.display = 'none';
   document.getElementById('staffView').style.display = 'none';
-  const sel = document.getElementById('loginSelect');
-  sel.innerHTML = STAFF.map(s => '<option value="' + s.id + '">' + s.name + '(' + ROLE_LABEL[s.role] + ')</option>').join('');
+  document.getElementById('loginSelect').innerHTML = STAFF.map(s => '<option value="' + s.id + '">' + s.name + '(' + ROLE_LABEL[s.role] + ')</option>').join('');
   document.getElementById('loginPin').value = '';
   document.getElementById('loginErr').textContent = '';
 }
@@ -391,19 +571,17 @@ function doStaffLogin() {
   const id = document.getElementById('loginSelect').value;
   const pin = document.getElementById('loginPin').value;
   const st = staffById(id);
-  if (st.pin !== pin) {
-    document.getElementById('loginErr').textContent = '密碼錯誤。如忘記密碼,請聯絡主管。';
-    return;
-  }
+  if (st.pin !== pin) { document.getElementById('loginErr').textContent = '密碼錯誤。如忘記密碼,請聯絡主管。'; return; }
   state.user = { type: 'staff', id, name: st.name, role: st.role };
   document.getElementById('loginPanel').style.display = 'none';
   document.getElementById('managerView').style.display = 'none';
   document.getElementById('staffView').style.display = 'block';
-  updateUserBar();
-  renderStaffView();
+  logIt(st.name + ' 已登入');
+  updateUserBar(); renderStaffView(); renderInbox(); updateInboxDots();
 }
 
 function logout() {
+  if (state.user) logIt(state.user.name + ' 已登出');
   state.user = null;
   document.getElementById('managerView').style.display = 'none';
   document.getElementById('staffView').style.display = 'none';
@@ -421,17 +599,38 @@ function updateUserBar() {
   }
 }
 
-document.querySelectorAll('.tab').forEach(t => {
-  t.onclick = () => {
-    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
-    t.classList.add('active');
-    document.querySelector('[data-panel="' + t.dataset.tab + '"]').classList.add('active');
-  };
-});
+function updateInboxDots() {
+  const mgrDot = document.getElementById('mgrInboxDot');
+  const stfDot = document.getElementById('stfInboxDot');
+  if (mgrDot) {
+    const unread = state.notifications.filter(n => n.target === 'manager' && !n.read).length;
+    mgrDot.innerHTML = unread > 0 ? '<span class="tab-dot"></span>' : '';
+  }
+  if (stfDot) {
+    if (state.user && state.user.type === 'staff') {
+      const unread = state.notifications.filter(n => n.target === state.user.id && !n.read).length;
+      stfDot.innerHTML = unread > 0 ? '<span class="tab-dot"></span>' : '';
+    } else stfDot.innerHTML = '';
+  }
+}
+
+function bindTabs() {
+  document.querySelectorAll('.tab').forEach(t => {
+    t.onclick = () => {
+      const parent = t.closest('#managerView, #staffView');
+      if (!parent) return;
+      parent.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      parent.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      parent.querySelector('[data-panel="' + t.dataset.tab + '"]').classList.add('active');
+      if (t.dataset.tab === 'inbox' || t.dataset.tab === 'myinbox') renderInbox();
+      if (t.dataset.tab === 'payroll') renderPayroll();
+    };
+  });
+}
 
 function renderRoster() {
-  const g = document.getElementById('rosterGrid');
+  const g = document.getElementById('rosterGrid'); if (!g) return;
   let html = '<div></div>';
   DAYS.forEach(d => html += '<div class="day-head">' + d + '</div>');
   SLOTS.forEach((slot, sIdx) => {
@@ -439,14 +638,15 @@ function renderRoster() {
     DAYS.forEach((d, dIdx) => {
       const key = dIdx + '-' + sIdx;
       const sh = state.shifts[key] || {};
-      const pm = sh.pm ? staffById(sh.pm) : null;
-      const sec = sh.sec ? staffById(sh.sec) : null;
+      const pmId = getShiftHolder(sh, 'pm'); const secId = getShiftHolder(sh, 'sec');
+      const pmStatus = getShiftStatus(sh, 'pm'); const secStatus = getShiftStatus(sh, 'sec');
+      const pm = pmId ? staffById(pmId) : null; const sec = secId ? staffById(secId) : null;
       html += '<div style="display:flex; flex-direction:column; gap:3px;">';
       html += pm
-        ? '<div class="slot covered-pm"><span class="who">' + shortName(pm.name) + '</span><span class="role">物管</span></div>'
+        ? '<div class="slot covered-pm ' + (pmStatus === 'pending' ? 'pending' : '') + '" onclick="openShiftDetail(\'' + key + '\',\'pm\')">' + (pmStatus !== 'confirmed' ? '<span class="slot-status ' + pmStatus + '"></span>' : '') + '<span class="who">' + shortName(pm.name) + '</span><span class="role">物管</span></div>'
         : '<div class="slot uncovered" onclick="coverShift(\'' + key + '\',\'pm\')"><span class="who">未補位</span><span class="role">物管</span></div>';
       html += sec
-        ? '<div class="slot covered-sec"><span class="who">' + shortName(sec.name) + '</span><span class="role">保全</span></div>'
+        ? '<div class="slot covered-sec ' + (secStatus === 'pending' ? 'pending' : '') + '" onclick="openShiftDetail(\'' + key + '\',\'sec\')">' + (secStatus !== 'confirmed' ? '<span class="slot-status ' + secStatus + '"></span>' : '') + '<span class="who">' + shortName(sec.name) + '</span><span class="role">保全</span></div>'
         : '<div class="slot uncovered" onclick="coverShift(\'' + key + '\',\'sec\')"><span class="who">未補位</span><span class="role">保全</span></div>';
       html += '</div>';
     });
@@ -454,45 +654,59 @@ function renderRoster() {
   g.innerHTML = html;
 }
 
+function openShiftDetail(key, field) {
+  const sh = state.shifts[key]; const [d, s] = key.split('-').map(Number);
+  const holder = getShiftHolder(sh, field); const status = getShiftStatus(sh, field);
+  const st = staffById(holder);
+  const note = state.shiftNotes[key] && state.shiftNotes[key][field] ? state.shiftNotes[key][field].note : '';
+  document.getElementById('dialogTitle').textContent = DAYS[d] + ' ' + SLOTS[s] + ' · ' + st.name;
+  document.getElementById('dialogBody').innerHTML =
+    '<div class="muted" style="margin-bottom:8px;">狀態:' + STATUS_LABEL[status] + '</div>' +
+    (note ? '<div class="alert info" style="margin-bottom:8px;">📝 ' + note + '</div>' : '') +
+    '<div class="section-title">標記出勤</div>' +
+    '<div class="btn-row" style="margin-bottom:8px;">' +
+    '<button class="btn btn-sm btn-success" onclick="markAttendance(\'' + key + '\',\'' + field + '\',\'present\');closeDialog();">已出勤</button>' +
+    '<button class="btn btn-sm" onclick="markAttendance(\'' + key + '\',\'' + field + '\',\'late\');closeDialog();">遲到</button>' +
+    '<button class="btn btn-sm btn-danger" onclick="markAttendance(\'' + key + '\',\'' + field + '\',\'absent\');closeDialog();">缺勤</button>' +
+    '<button class="btn btn-sm" onclick="markAttendance(\'' + key + '\',\'' + field + '\',\'confirmed\');closeDialog();">重設</button>' +
+    '</div>' +
+    '<div class="section-title">更換人員</div>' +
+    '<button class="btn btn-sm full-btn" onclick="coverShift(\'' + key + '\',\'' + field + '\');">選擇其他員工</button>';
+  document.getElementById('dialogBg').classList.add('open');
+}
+
 function renderMetrics() {
-  let total = 0, covered = 0, uncovered = 0;
+  let total = 0, covered = 0, uncovered = 0, pending = 0;
   Object.values(state.shifts).forEach(sh => {
     total += 2;
-    if (sh.pm) covered++; else uncovered++;
-    if (sh.sec) covered++; else uncovered++;
+    ['pm','sec'].forEach(f => {
+      const h = getShiftHolder(sh, f); const st = getShiftStatus(sh, f);
+      if (h) { covered++; if (st === 'pending') pending++; } else uncovered++;
+    });
   });
   const unavailCount = Object.values(state.unavailable).reduce((a, b) => a + b.length, 0);
   document.getElementById('metrics').innerHTML = [
-    ['總班次', total],
-    ['已補位', covered],
-    ['未補位', uncovered],
-    ['請假次數', unavailCount]
+    ['總班次', total], ['已補位', covered], ['未補位', uncovered], ['請假次數', unavailCount]
   ].map(([l, v]) => '<div class="metric"><div class="metric-label">' + l + '</div><div class="metric-val">' + v + '</div></div>').join('');
 
   const alerts = document.getElementById('coverageAlerts');
-  if (uncovered > 0) {
-    alerts.innerHTML = '<div class="alert warn">⚠ 本週有 ' + uncovered + ' 個班次未補位。請點擊紅色格子手動指派,或聯絡其他員工。</div>';
-  } else {
-    alerts.innerHTML = '<div class="alert success">✓ 本週所有班次皆已補位。</div>';
-  }
+  let html = '';
+  if (uncovered > 0) html += '<div class="alert warn">⚠ 本週有 ' + uncovered + ' 個班次未補位,請點擊紅色格子手動指派。</div>';
+  if (pending > 0) html += '<div class="alert info">ℹ ' + pending + ' 個代班指派正在等待員工確認。</div>';
+  if (!html) html = '<div class="alert success">✓ 本週所有班次皆已補位並確認。</div>';
+  alerts.innerHTML = html;
 }
 
 function renderStaff() {
   const pmCount = STAFF.filter(s => s.role === 'PM').length;
   const secCount = STAFF.filter(s => s.role === 'SEC').length;
   document.getElementById('staffSummary').textContent = pmCount + ' 位物業經理 · ' + secCount + ' 位保全';
-  const list = document.getElementById('staffList');
-  list.innerHTML = '<div class="card">' + STAFF.map(s => {
+  document.getElementById('staffList').innerHTML = '<div class="card">' + STAFF.map(s => {
     const unavail = state.unavailable[s.id] || [];
     const count = shiftCount(s.id);
-    const status = unavail.length > 0
-      ? '<span class="badge unavail">請假 ' + unavail.length + ' 天</span>'
-      : '<span class="badge avail">正常出勤</span>';
-    return '<div class="staff-row">' +
-      '<div class="avatar ' + (s.role === 'PM' ? 'pm' : 'sec') + '">' + shortName(s.name) + '</div>' +
-      '<div class="staff-info"><div class="staff-name">' + s.name + '</div><div class="staff-meta">' + ROLE_LABEL[s.role] + ' · ' + s.phone + ' · 本週 ' + count + ' 班 · 密碼 ' + s.pin + '</div></div>' +
-      status +
-      '</div>';
+    const status = unavail.length > 0 ? '<span class="badge unavail">請假 ' + unavail.length + ' 天</span>' : '<span class="badge avail">正常出勤</span>';
+    return '<div class="staff-row"><div class="avatar ' + (s.role === 'PM' ? 'pm' : 'sec') + '">' + shortName(s.name) + '</div>' +
+      '<div class="staff-info"><div class="staff-name">' + s.name + '</div><div class="staff-meta">' + ROLE_LABEL[s.role] + ' · ' + s.phone + ' · 本週 ' + count + ' 班 · 時薪 NT$' + s.hourly + ' · 密碼 ' + s.pin + '</div></div>' + status + '</div>';
   }).join('') + '</div>';
 }
 
@@ -502,32 +716,60 @@ function renderCallinSelects() {
 }
 
 function renderLog() {
-  const l = document.getElementById('activityLog');
-  if (!l) return;
-  if (state.log.length === 0) {
-    l.innerHTML = '<div class="muted">目前尚無活動紀錄。</div>';
-    return;
+  const l = document.getElementById('activityLog'); if (!l) return;
+  if (state.log.length === 0) { l.innerHTML = '<div class="muted">目前尚無活動紀錄。</div>'; return; }
+  l.innerHTML = state.log.slice(0, 50).map(e => '<div class="log-entry"><span class="time">' + e.time + '</span>' + e.msg + '</div>').join('');
+}
+
+function renderInbox() {
+  const mgrBox = document.getElementById('managerInbox');
+  const stfBox = document.getElementById('staffInbox');
+  if (mgrBox) {
+    const items = state.notifications.filter(n => n.target === 'manager');
+    mgrBox.innerHTML = items.length === 0 ? '<div class="card muted">目前沒有通知。</div>' : items.map(renderInboxItem).join('');
   }
-  l.innerHTML = state.log.slice(0, 30).map(e => '<div class="log-entry"><span class="time">' + e.time + '</span>' + e.msg + '</div>').join('');
+  if (stfBox && state.user && state.user.type === 'staff') {
+    const items = state.notifications.filter(n => n.target === state.user.id);
+    stfBox.innerHTML = items.length === 0 ? '<div class="card muted">目前沒有通知。</div>' : items.map(renderInboxItem).join('');
+  }
+}
+
+function renderInboxItem(n) {
+  let actions = '';
+  if (n.actions && n.actions.length) {
+    actions = '<div class="inbox-item-actions">' + n.actions.map(a => {
+      const cls = a.label === '接受' ? 'btn-success' : a.label === '拒絕' ? 'btn-danger' : '';
+      const argsStr = JSON.stringify(a.args).replace(/"/g,'&quot;');
+      return '<button class="btn btn-sm ' + cls + '" onclick="event.stopPropagation(); handleAction(\'' + n.id + '\',\'' + a.action + '\',' + argsStr + ')">' + a.label + '</button>';
+    }).join('') + '</div>';
+  }
+  return '<div class="inbox-item ' + (n.read ? '' : 'unread') + '" onclick="markRead(\'' + n.id + '\')">' +
+    '<div class="inbox-item-head"><strong style="font-weight:500;">' + n.title + '</strong><span class="inbox-item-time">' + n.time + '</span></div>' +
+    '<div>' + n.body + '</div>' + actions + '</div>';
+}
+
+function handleAction(nid, action, args) {
+  markRead(nid);
+  const n = state.notifications.find(x => x.id === nid);
+  if (n) n.actions = null;
+  if (action === 'accept_shift') acceptShift.apply(null, args);
+  else if (action === 'decline_shift') declineShift.apply(null, args);
+  saveState();
 }
 
 function doCallIn() {
   const id = document.getElementById('callinStaff').value;
   const day = parseInt(document.getElementById('callinDay').value);
-  const results = processCallIn(id, day);
+  const note = document.getElementById('callinNote').value.trim();
+  const results = processCallIn(id, day, note);
   const st = staffById(id);
   const res = document.getElementById('callinResult');
-  if (results.length === 0) {
-    res.innerHTML = '<div class="alert info">' + st.name + ' 在 ' + DAYS[day] + ' 原本就沒有排班,已登記為當日不可排班。</div>';
-    return;
-  }
+  document.getElementById('callinNote').value = '';
+  if (results.length === 0) { res.innerHTML = '<div class="alert info">' + st.name + ' 在 ' + DAYS[day] + ' 原本就沒有排班,已登記為當日不可排班。</div>'; return; }
   let html = '<div class="card"><h3 style="font-size:14px; font-weight:500; margin:0 0 10px;">處理結果:' + st.name + ' · ' + DAYS[day] + '</h3>';
   results.forEach(r => {
-    if (r.action === 'reassigned') {
-      html += '<div class="alert success" style="margin-bottom:6px;">✓ ' + r.slot + ' → 已重新指派給 ' + r.to + '</div>';
-    } else {
-      html += '<div class="alert danger" style="margin-bottom:6px;">⚠ ' + r.slot + ' ' + ROLE_LABEL[r.role] + ' → 無合格替補人員,該班次未補位。</div>';
-    }
+    if (r.action === 'reassigned') html += '<div class="alert success" style="margin-bottom:6px;">✓ ' + r.slot + ' → 已通知 ' + r.to + ' 代班(等待確認)</div>';
+    else html += '<div class="alert danger" style="margin-bottom:6px;">⚠ ' + r.slot + ' ' + ROLE_LABEL[r.role] + ' → 無合格替補人員,該班次未補位。</div>';
   });
   html += '</div>';
   res.innerHTML = html;
@@ -537,44 +779,35 @@ function coverShift(key, field) {
   const [d, s] = key.split('-').map(Number);
   const role = field === 'pm' ? 'PM' : 'SEC';
   const candidates = STAFF.filter(x => x.role === role && isAvailable(x.id, d));
-  const bg = document.getElementById('dialogBg');
-  document.getElementById('dialogTitle').textContent = '補位:' + DAYS[d] + ' ' + SLOTS[s] + '(' + ROLE_LABEL[role] + ')';
+  document.getElementById('dialogTitle').textContent = '指派 ' + DAYS[d] + ' ' + SLOTS[s] + '(' + ROLE_LABEL[role] + ')';
   const body = document.getElementById('dialogBody');
-  if (candidates.length === 0) {
-    body.innerHTML = '<div class="muted">當日已無可用的' + ROLE_LABEL[role] + '員工,需直接聯絡休假中的員工。</div>';
-  } else {
-    body.innerHTML = candidates.map(c =>
-      '<button class="btn candidate-btn" onclick="assignShift(\'' + key + '\',\'' + field + '\',\'' + c.id + '\')">' + c.name + ' · 本週 ' + shiftCount(c.id) + ' 班</button>'
-    ).join('');
-  }
-  bg.classList.add('open');
+  if (candidates.length === 0) body.innerHTML = '<div class="muted">當日已無可用的' + ROLE_LABEL[role] + '員工,需直接聯絡休假中的員工。</div>';
+  else body.innerHTML = candidates.map(c => '<button class="btn candidate-btn" onclick="assignShift(\'' + key + '\',\'' + field + '\',\'' + c.id + '\')">' + c.name + ' · 本週 ' + shiftCount(c.id) + ' 班</button>').join('');
+  document.getElementById('dialogBg').classList.add('open');
 }
 
 function assignShift(key, field, staffId) {
-  state.shifts[key][field] = staffId;
+  const sh = state.shifts[key];
+  setShiftHolder(sh, field, staffId, 'confirmed');
   const st = staffById(staffId);
   const [d, s] = key.split('-').map(Number);
   logIt('手動指派 ' + st.name + ' 至 ' + DAYS[d] + ' ' + SLOTS[s]);
-  closeDialog();
-  renderAll();
+  notify(staffId, '新班次', '您被指派 ' + DAYS[d] + ' ' + SLOTS[s] + ' 的班次。');
+  closeDialog(); saveState(); renderAll();
 }
 
-function closeDialog() {
-  document.getElementById('dialogBg').classList.remove('open');
-}
+function closeDialog() { document.getElementById('dialogBg').classList.remove('open'); }
 
 function resetWeek() {
-  initShifts();
-  state.unavailable = {};
-  state.log = [];
+  if (!confirm('確定要重設本週班表嗎?此動作會清除所有出勤紀錄與請假資料。')) return;
+  initShifts(); state.unavailable = {}; state.shiftNotes = {};
   logIt('已重設本週班表,恢復預設輪班。');
-  renderAll();
+  saveState(); renderAll();
 }
 
 function renderStaffView() {
   if (!state.user || state.user.type !== 'staff') return;
-  const id = state.user.id;
-  const st = staffById(id);
+  const id = state.user.id; const st = staffById(id);
   document.getElementById('staffViewTitle').textContent = st.name + ',您好';
   document.getElementById('staffViewRole').textContent = ROLE_LABEL[st.role];
   const mine = [];
@@ -582,63 +815,161 @@ function renderStaffView() {
     for (let s = 0; s < 2; s++) {
       const key = d + '-' + s;
       const sh = state.shifts[key];
-      if (sh && (sh.pm === id || sh.sec === id)) {
-        mine.push({ day: d, slot: s });
+      if (sh && (getShiftHolder(sh, 'pm') === id || getShiftHolder(sh, 'sec') === id)) {
+        const field = getShiftHolder(sh, 'pm') === id ? 'pm' : 'sec';
+        mine.push({ day: d, slot: s, key, field, status: getShiftStatus(sh, field) });
       }
     }
   }
   const box = document.getElementById('staffViewShifts');
-  if (mine.length === 0) {
-    box.innerHTML = '<div class="alert info">本週尚未排班。</div>';
-  } else {
+  if (mine.length === 0) { box.innerHTML = '<div class="alert info">本週尚未排班。</div>'; }
+  else {
     box.innerHTML = '<div class="card"><h3 style="font-size:14px; font-weight:500; margin:0 0 10px;">本週班表(共 ' + mine.length + ' 班)</h3>' +
-      mine.map(m => '<div class="my-shift"><span>' + DAYS[m.day] + ' · ' + SLOTS[m.slot] + '</span><span class="badge avail">已確認</span></div>').join('') +
-      '</div>';
+      mine.map(m => {
+        const note = state.shiftNotes[m.key] && state.shiftNotes[m.key][m.field] ? state.shiftNotes[m.key][m.field].note : '';
+        const statusBadge = m.status === 'pending' ? '<span class="badge pending">待確認</span>'
+          : m.status === 'present' ? '<span class="badge avail">已出勤</span>'
+          : m.status === 'late' ? '<span class="badge off">遲到</span>'
+          : m.status === 'absent' ? '<span class="badge unavail">缺勤</span>'
+          : '<span class="badge avail">待出勤</span>';
+        let actions = '';
+        if (m.status === 'confirmed' || m.status === 'pending') actions += '<button class="btn btn-sm btn-success" onclick="staffMarkPresent(\'' + m.key + '\',\'' + m.field + '\')">確認出勤</button>';
+        actions += '<button class="btn btn-sm" onclick="staffAddNote(\'' + m.key + '\',\'' + m.field + '\')">新增備註</button>';
+        return '<div class="my-shift"><div class="my-shift-head"><span>' + DAYS[m.day] + ' · ' + SLOTS[m.slot] + '</span>' + statusBadge + '</div>' +
+          (note ? '<div class="my-shift-note">📝 ' + note + '</div>' : '') +
+          '<div class="my-shift-actions">' + actions + '</div></div>';
+      }).join('') + '</div>';
   }
   document.getElementById('staffCallinDay').innerHTML = DAYS.map((d, i) => '<option value="' + i + '">' + d + '</option>').join('');
   document.getElementById('staffCallinResult').innerHTML = '';
+  updateInboxDots();
+}
+
+function staffMarkPresent(key, field) {
+  markAttendance(key, field, 'present');
+  notify('manager', '員工確認出勤', state.user.name + ' 已確認 ' + key + ' 出勤。');
+  renderStaffView();
+}
+
+function staffAddNote(key, field) {
+  const note = prompt('請輸入備註(例如:提早到達、交班事項):');
+  if (note && note.trim()) {
+    addShiftNote(key, field, note.trim());
+    const [d, s] = key.split('-').map(Number);
+    logIt(state.user.name + ' 新增備註於 ' + DAYS[d] + ' ' + SLOTS[s] + ':' + note);
+    notify('manager', '員工班次備註', state.user.name + ' 於 ' + DAYS[d] + ' ' + SLOTS[s] + ' 留言:' + note);
+    renderStaffView();
+  }
 }
 
 function staffCallIn() {
   const id = state.user.id;
   const day = parseInt(document.getElementById('staffCallinDay').value);
-  const results = processCallIn(id, day);
+  const note = document.getElementById('staffCallinNote').value.trim();
+  const results = processCallIn(id, day, note);
   const res = document.getElementById('staffCallinResult');
-  if (results.length === 0) {
-    res.innerHTML = '<div class="alert info">您在 ' + DAYS[day] + ' 原本就沒有排班,已登記為當日不可排班。</div>';
-  } else {
+  document.getElementById('staffCallinNote').value = '';
+  if (results.length === 0) res.innerHTML = '<div class="alert info">您在 ' + DAYS[day] + ' 原本就沒有排班,已登記為當日不可排班。</div>';
+  else {
     let html = '';
     results.forEach(r => {
-      if (r.action === 'reassigned') {
-        html += '<div class="alert success" style="margin-bottom:6px;">✓ ' + r.slot + ' → ' + r.to + ' 將為您代班。</div>';
-      } else {
-        html += '<div class="alert danger" style="margin-bottom:6px;">⚠ ' + r.slot + ' 無人可代班,已通知主管處理。</div>';
-      }
+      if (r.action === 'reassigned') html += '<div class="alert success" style="margin-bottom:6px;">✓ ' + r.slot + ' → 已通知 ' + r.to + ' 代班。</div>';
+      else html += '<div class="alert danger" style="margin-bottom:6px;">⚠ ' + r.slot + ' 無人可代班,已通知主管處理。</div>';
     });
     res.innerHTML = html;
   }
   renderStaffView();
 }
 
+function computePayroll() {
+  return STAFF.map(s => {
+    let present = 0, late = 0, absent = 0, pending = 0, confirmed = 0;
+    Object.values(state.shifts).forEach(sh => {
+      ['pm','sec'].forEach(f => {
+        if (getShiftHolder(sh, f) === s.id) {
+          const st = getShiftStatus(sh, f);
+          if (st === 'present') present++;
+          else if (st === 'late') late++;
+          else if (st === 'absent') absent++;
+          else if (st === 'pending') pending++;
+          else confirmed++;
+        }
+      });
+    });
+    const hours = (present + late) * HOURS_PER_SHIFT;
+    const lateDeduction = late * 0.5 * s.hourly;
+    const gross = hours * s.hourly - lateDeduction;
+    return { staff: s, present, late, absent, pending, confirmed, hours, gross };
+  });
+}
+
+function renderPayroll() {
+  const rows = computePayroll();
+  const total = rows.reduce((a, r) => a + r.gross, 0);
+  let html = '<div class="card"><div class="muted" style="margin-bottom:8px;">結算期間起始:' + state.monthStart + ' · 截至:' + new Date().toISOString().slice(0,10) + '</div>';
+  html += '<table class="payroll-table"><thead><tr><th>員工</th><th>職位</th><th class="num">已出勤</th><th class="num">遲到</th><th class="num">缺勤</th><th class="num">工時</th><th class="num">時薪</th><th class="num">本期應付</th></tr></thead><tbody>';
+  rows.forEach(r => {
+    html += '<tr><td>' + r.staff.name + '</td><td>' + ROLE_LABEL[r.staff.role] + '</td>' +
+      '<td class="num">' + r.present + '</td><td class="num">' + r.late + '</td><td class="num">' + r.absent + '</td>' +
+      '<td class="num">' + r.hours + '</td><td class="num">NT$' + r.staff.hourly + '</td>' +
+      '<td class="num">NT$' + Math.round(r.gross).toLocaleString() + '</td></tr>';
+  });
+  html += '<tr style="font-weight:500; background:var(--surface-2);"><td colspan="7">合計</td><td class="num">NT$' + Math.round(total).toLocaleString() + '</td></tr>';
+  html += '</tbody></table>';
+  html += '<div class="muted" style="margin-top:12px; font-size:12px;">備註:遲到每次扣 0.5 小時時薪。缺勤不計入工時。待確認與待出勤班次不計入本期薪資。</div>';
+  html += '</div>';
+  document.getElementById('payrollSummary').innerHTML = html;
+}
+
+function exportCSV() {
+  const rows = computePayroll();
+  const header = ['員工姓名','職位','電話','已出勤班次','遲到班次','缺勤班次','待確認班次','總工時','時薪(NT$)','本期應付(NT$)'];
+  const lines = [header.join(',')];
+  rows.forEach(r => {
+    lines.push([r.staff.name, ROLE_LABEL[r.staff.role], r.staff.phone, r.present, r.late, r.absent, r.pending, r.hours, r.staff.hourly, Math.round(r.gross)].join(','));
+  });
+  const total = rows.reduce((a, r) => a + r.gross, 0);
+  lines.push(['合計','','','','','','','','', Math.round(total)].join(','));
+  const csvContent = '\uFEFF' + lines.join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '薪資結算_' + new Date().toISOString().slice(0,10) + '.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  logIt('已匯出 CSV 薪資報表');
+}
+
+function closeMonth() {
+  if (!confirm('確定要結算本月嗎?\n\n執行後將:\n1. 自動匯出本月薪資 CSV\n2. 清空所有班表與出勤紀錄\n3. 重置請假紀錄\n4. 建立下個結算期間\n\n建議先單獨匯出 CSV 作為備份。')) return;
+  exportCSV();
+  initShifts(); state.unavailable = {}; state.shiftNotes = {}; state.notifications = [];
+  state.monthStart = new Date().toISOString().slice(0,10);
+  logIt('✓ 已結算本月薪資,班表已重置。新結算期間起始:' + state.monthStart);
+  saveState(); renderAll();
+  alert('月結完成。CSV 已下載,班表已重置為新週期。');
+}
+
 function renderAll() {
   if (state.user && state.user.type === 'manager') {
-    renderRoster();
-    renderMetrics();
-    renderStaff();
-    renderCallinSelects();
-    renderLog();
+    renderRoster(); renderMetrics(); renderStaff(); renderCallinSelects(); renderLog(); renderInbox(); renderPayroll();
   } else if (state.user && state.user.type === 'staff') {
-    renderStaffView();
+    renderStaffView(); renderInbox();
   }
+  updateInboxDots();
 }
 
 document.getElementById('loginPin').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') doStaffLogin();
 });
 
-initShifts();
-logIt('系統已啟動,本週預設班表已建立。');
-updateUserBar();
+const savedMode = localStorage.getItem(STORAGE_MODE);
+state.liveMode = savedMode === '1';
+updateModeUI();
+if (state.liveMode && loadState()) { /* loaded */ }
+else { initShifts(); logIt(state.liveMode ? '系統已啟動(正式模式)' : '系統已啟動(展示模式)'); }
+bindTabs(); updateUserBar();
 </script>
 </body>
 </html>
