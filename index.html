@@ -104,11 +104,15 @@
   .slot.pending { border-style: dashed; border-color: var(--warning-border); }
   .slot .who { font-weight: 500; }
   .slot .role { font-size: 11px; opacity: 0.85; }
-  .slot-status { position: absolute; top: 3px; right: 3px; width: 8px; height: 8px; border-radius: 50%; }
-  .slot-status.present { background: #27500A; }
-  .slot-status.late { background: #BA7517; }
-  .slot-status.absent { background: #A32D2D; }
-  .slot-status.pending { background: #EF9F27; }
+  .slot-status { display: none; }
+  .slot:has(> .slot-status.present) { background: #27500A !important; color: #ffffff !important; border-color: #27500A !important; }
+  .slot:has(> .slot-status.late)    { background: #BA7517 !important; color: #ffffff !important; border-color: #BA7517 !important; }
+  .slot:has(> .slot-status.absent)  { background: #A32D2D !important; color: #ffffff !important; border-color: #A32D2D !important; }
+  .slot:has(> .slot-status.pending) { background: #EF9F27 !important; color: #222222 !important; border-color: #EF9F27 !important; }
+  .slot:has(> .slot-status.present) .role,
+  .slot:has(> .slot-status.late) .role,
+  .slot:has(> .slot-status.absent) .role,
+  .slot:has(> .slot-status.pending) .role { opacity: 0.95; }
   .staff-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--border); }
   .staff-row:last-child { border-bottom: none; }
   .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 13px; flex-shrink: 0; }
